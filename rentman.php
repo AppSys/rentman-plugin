@@ -1090,11 +1090,7 @@
                 }
             }
             rentman_error_log(date("d-m-Y h:i:s a") . " - " . $parsed["message"] . "\n" . $message . "\n");
-        }
-        $file_path = WP_CONTENT_DIR . '/uploads/rentman/debug.txt';
-        $currentContent = file_get_contents($file_path);
-        $currentContent.= "doorlopen\n";
-        file_put_contents($file_path, $currentContent);
+        }        
         return $response;
     }
 
