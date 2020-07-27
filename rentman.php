@@ -335,22 +335,16 @@
               echo("</h2>");
               echo("<hr>");
               echo("<p>");
-              if($login["message"] == "&#x274c; Account not linked to url"){
-                  echo('<font style="color:#FF0000;"><b>');
-                  _e("&#x274c; Account is not linked to this url!", 'rentalshop');
-                  echo('</b></font>');
+              if(get_option('plugin-rentman-demo-expires') < time()){
+                 echo('<p><font style="color:#FF0000;"><b>');
+                 _e('Your payment is overdue!', 'rentalshop');
+                 echo('</b></font>');
               }else{
-                  if(get_option('plugin-rentman-demo-expires') < time()){
-                    echo('<p><font style="color:#FF0000;"><b>');
-                    _e('Your payment is overdue!', 'rentalshop');
-                    echo('</b></font>');
-                  }else{
-                    _e('Your license is activated', 'rentalshop');
-                  }
-                  echo("<br>");
-                  _e('Paid until:', 'rentalshop');
-                  echo(" " . date('Y/m/d',get_option('plugin-rentman-demo-expires')));
+                  _e('Your license is activated', 'rentalshop');
               }
+              echo("<br>");
+              _e('Paid until:', 'rentalshop');
+              echo(" " . date('Y/m/d',get_option('plugin-rentman-demo-expires')));
               echo("</p>");
               ?>
               <input type="submit" class="button button-primary" id="activate-account" value="<?php _e('Manage license', 'rentalshop') ?>">
@@ -396,10 +390,11 @@
               if($login["message"] == "&#x274c; Your demo has expired!"){_e("&#x274c; Your demo has expired!", 'rentalshop');}
               if($login["message"] == "&#x274c; Your subscription has expired!"){_e("&#x274c; Your subscription has expired!", 'rentalshop');}
               if($login["message"] == "&#x274c; An error occurred!"){_e("&#x274c; An error occurred!", 'rentalshop');}
+              if($login["message"] == "&#x274c; Account not linked to url"){_e("&#x274c; Account is not linked to this url!", 'rentalshop');}
               if($login["message"] == "&#x2705; Connection with the Rentman API was successful!"){_e("&#x2705; Connection with the Rentman API was successful!", 'rentalshop');}
               $token = "fail";
               if($login["status"] == "success"){
-                $token = $login["token"];
+                  $token = $login["token"];
               }
             ?>
             <br><br>
