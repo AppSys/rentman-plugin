@@ -724,7 +724,7 @@
             }
 
             public function needs_shipping(){
-                return false;
+                return true;
             }
         }
     }
