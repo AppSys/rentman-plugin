@@ -55,9 +55,9 @@
             }
             require 'plugin-update-checker/plugin-update-checker.php';
             $myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
-	             'https://github.com/AppSys/rentman-plugin',
-	              __FILE__,
-	               'unique-plugin-or-theme-slug'
+                 'https://github.com/AppSys/rentman-plugin',
+                  __FILE__,
+                   'unique-plugin-or-theme-slug'
             );
         }
     }
@@ -266,7 +266,7 @@
 
         printf( __("<h1>Rentman Product Import - Advanced v%s</h1><hr><br>", "rentalshop"), get_plugin_data(realpath(dirname(__FILE__)) . '/rentman.php')['Version']);
 
-	    # Check for plugin updates
+        # Check for plugin updates
         $url = 'https://license.appsysit.be/checkforupdate';
         $fields = array(
             'language'               => get_locale(),
@@ -551,15 +551,15 @@
                       <select name='plugin-timezone'>
                           <?php
                           foreach($timezones as $region => $list){
-                          	echo '<optgroup label="' . $region . '">';
-                          	foreach($list as $timezone => $name){
+                              echo '<optgroup label="' . $region . '">';
+                              foreach($list as $timezone => $name){
                               if($timezoneCheck == $timezone){
-                          		    echo '<option value="' . $timezone . '" selected>' . $name . '</option>';
+                                      echo '<option value="' . $timezone . '" selected>' . $name . '</option>';
                               }else{
                                   echo '<option value="' . $timezone . '">' . $name . '</option>';
                               }
-                          	}
-                          	echo '<optgroup>';
+                              }
+                              echo '<optgroup>';
                           }
                           ?>
                       </select>
@@ -914,7 +914,7 @@
     function add_action_links( $actions, $plugin_file ) {
         static $plugin;
         if (!isset($plugin)){
-        	$plugin = plugin_basename(__FILE__);
+            $plugin = plugin_basename(__FILE__);
         }
         if ($plugin == $plugin_file) {
             $settings = array('settings' => '<a href="admin.php?page=rentman-shop">' . __('Settings', 'General') . '</a>');
@@ -1055,7 +1055,7 @@
 
     # Does a JSON request with a given message
     function do_request($url, $message){
-	    $response = wp_remote_post($url, ['body' => $message]);
+        $response = wp_remote_post($url, ['body' => $message]);
         $parsed = json_decode($response['body'], true);
 
         if(isset($parsed['errorCode']) && $parsed['errorCode'] != 0){
@@ -1110,8 +1110,8 @@
 
     # Add admin_tabs.js for jQuery tabs
     function pw_load_scripts($hook) {
-      	if( $hook != 'woocommerce_page_rentman-shop' ){
-      		  return;
+          if( $hook != 'woocommerce_page_rentman-shop' ){
+                return;
         }
         /*venobox*/
         wp_register_style('style_venobox', plugins_url('css/venobox.css?' . get_plugin_data(realpath(dirname(__FILE__)) . '/rentman.php')['Version'], __FILE__ ));
