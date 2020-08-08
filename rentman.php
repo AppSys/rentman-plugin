@@ -258,31 +258,29 @@
     }
 
     # Display and initialize Rentman Plugin Menu in Wordpress Admin Panel
-    function menu_display(){
+    function menu_display() {
         global $currenttab;
         global $woocommerceversion;
         global $woocommerceversioncheck;
 
+
         printf( __("<h1>Rentman Product Import - Advanced v%s</h1><hr><br>", "rentalshop"), get_plugin_data(realpath(dirname(__FILE__)) . '/rentman.php')['Version']);
 
-        # Check for plugin updates
+	    # Check for plugin updates
         $url = 'https://license.appsysit.be/checkforupdate';
         $fields = array(
             'language'               => get_locale(),
             'currentapiversion'      => get_plugin_data(realpath(dirname(__FILE__)) . '/rentman.php')['Version'],
             'adminurl'               => admin_url() . "update-core.php"
         );
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, count($fields));
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($fields));
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 2);
-        $result = curl_exec($ch);
-        if(curl_errno($ch)){
-          $error_msg = curl_error($ch);
+
+        $update_check = wp_remote_post($url, ['body' => $fields]);
+
+        if (is_wp_error($update_check)) {
+            $error_msg = $update_check->errors['http_request_failed'];
+        } else {
+            print($update_check['body']);
         }
-        curl_close($ch);
 
         $current = "login";
         if(!empty($currenttab)) {
@@ -293,7 +291,7 @@
         );
 
         $login = login_user();
-        if($login["status"] != "fail" && $woocommerceversion!="" && $woocommerceversioncheck >= 30) {
+        if ($login["status"] != "fail" && $woocommerceversion!="" && $woocommerceversioncheck >= 30) {
             $tabs = array(
                 'login'   => __( 'Login', 'rentalshop' ),
                 'settings'  => __( 'Settings', 'rentalshop' ),
@@ -390,6 +388,7 @@
             </table>
             <?php
               echo("<br>");
+
               if($login["message"] == "&#x274c; Please fill in the required field"){_e("&#x274c; Please fill in the required field", 'rentalshop');}
               if($login["message"] == "&#x274c; License API is down!"){_e("&#x274c; License API is down!", 'rentalshop');}
               if($login["message"] == "&#x274c; This token is invalid!"){_e("&#x274c; This token is invalid!", 'rentalshop');}
@@ -859,7 +858,7 @@
           return array("status" => "fail", "message" => "&#x274c; Please fill in the required field");
         }
         $response = get_appsys_jwt();
-        if($response === false){
+        if ($response === false) {
             return array("status" => "fail", "message" => "&#x274c; License API is down!");
         }
         $response = json_decode($response, true);
@@ -968,7 +967,7 @@
         $file_name = 'test.png';
         //$targetUrl = WP_CONTENT_DIR . $artDir . $file_name;
         $targetUrl = wp_upload_dir()["basedir"] . $artDir . $file_name;
-        copy($fileUrl, $targetUrl);
+        //copy($fileUrl, $targetUrl);
         $errors = error_get_last();
         if (file_exists($targetUrl)){
             _e('&#x2705; Addition of images was successful.<br>', 'rentalshop');
@@ -987,7 +986,7 @@
 
         # Check if images can be displayed
         $targetUrl = wp_upload_dir()["basedir"] . $artDir . $new_file_name;
-        copy($fileUrlHtaccess,$targetUrl);
+        #copy($fileUrlHtaccess,$targetUrl);
         $errors = error_get_last();
         if (!file_exists($targetUrl)){
             _e('&#x26a0; Important: a .htaccess file is missing in the \'uploads/rentman/\' folder! The imported images might not be displayed correctly.<br>', 'rentalshop');
@@ -1056,25 +1055,8 @@
 
     # Does a JSON request with a given message
     function do_request($url, $message){
-        # Setup a cURL session
-        $ch = curl_init($url);
-        if($message != ""){
-          curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-          curl_setopt($ch, CURLOPT_POST, true);
-          curl_setopt($ch, CURLOPT_POSTFIELDS, $message);
-        }
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-
-        # Send Request & Receive Response
-        $response = curl_exec($ch);
-
-        # Uncomment this function if you want to display additional error data
-        // error_info($ch);
-
-        curl_close($ch);
-
-        $parsed = json_decode($response, true);
+	    $response = wp_remote_post($url, ['body' => $message]);
+        $parsed = json_decode($response['body'], true);
 
         if(isset($parsed['errorCode']) && $parsed['errorCode'] != 0){
             # remove token, account, user, password from string
@@ -1090,8 +1072,8 @@
                 }
             }
             rentman_error_log(date("d-m-Y h:i:s a") . " - " . $parsed["message"] . "\n" . $message . "\n");
-        }        
-        return $response;
+        }
+        return $response['body'];
     }
 
     # Displays error info and HTTP code
