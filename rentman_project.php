@@ -108,13 +108,24 @@
         return $fields;
     }
 
-    # Adds the rental period data to the order data in the confirmation email
+    # Adds the rental period data to the order data in the confirmation email (if there are rentables)
     function add_dates_to_email($fields, $sent_to_admin, $order){
-        $unformatted_date = explode(" ~ ", get_post_meta($order->id, 'rental_period', true));
-        $fields['rental_period'] = array(
-            'label' => __('Rental period', 'rentalshop'),
-            'value' => format_date_picker_date($unformatted_date[0]) . " ~ " . format_date_picker_date($unformatted_date[1]),
-        );
+        $items = $order->get_items();
+        $rentableProducts = false;
+        foreach ( $items as $item ) {
+          $product = $item->get_product();
+          if( $product->is_type('rentable') ){
+              $rentableProducts = true;
+              break;
+          }
+        }
+        if($rentableProducts){
+            $unformatted_date = explode(" ~ ", get_post_meta($order->id, 'rental_period', true));
+            $fields['rental_period'] = array(
+                'label' => __('Rental period', 'rentalshop'),
+                'value' => format_date_picker_date($unformatted_date[0]) . " ~ " . format_date_picker_date($unformatted_date[1]),
+            );
+        }
         return $fields;
     }
 
