@@ -18,24 +18,14 @@
             'plugin'          => $pluginversion,
             'url'             => $siteurl
         );
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, count($fields));
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($fields));
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 2);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        $result = curl_exec($ch);
-        if(curl_getinfo($ch,CURLINFO_RESPONSE_CODE) === 500){
-          curl_close($ch);
-          return false;
+
+        $response = wp_remote_post( $url, ['body' => $fields] );
+        if ($response['response']['code'] == 500) {
+            return false;
         }
-        if(curl_errno($ch)){
-          curl_close($ch);
-          return false;
-        }
-        curl_close($ch);
-        return $result;
+
+        return is_wp_error($response) ? false : $response['body'];
+
     }
 
     // --------------------------------------------------------- \\
@@ -732,7 +722,7 @@
                 "comparator" => "="
               )
           )
-        );        
+        );
         return $object_data;
     }
 
