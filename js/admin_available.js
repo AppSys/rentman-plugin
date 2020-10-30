@@ -20,7 +20,7 @@ jQuery().ready(function() {
       if(startdate > enddate){
         enddateyear = parseInt(String(startdate).substring(0,4));
         enddatemonth = parseInt(String(startdate).substring(4,6)) - 1;
-        enddateday = parseInt(String(startdate).substring(6,8));
+        enddateday = parseInt(String(startdate).substring(6,8));        
         jQuery('#end-date').datepicker().data('datepicker').selectDate(new Date(enddateyear,enddatemonth,enddateday));
       }else{
         quickCheck();

@@ -59,8 +59,7 @@
                     $id_sku = array();
                     $skus = array_keys($parsed['response']['items']['Materiaal']);
                     $woocommerce_rentman_products = array();
-                    # GET all the rentman products already in the woocommerce database (postid and sku)
-                    //$args = array('post_type' => 'product', 'post_status' => 'any', 'posts_per_page' => -1, 'rentman_imported' => true, 'fields' => 'ids');                    
+                    # GET all the rentman products already in the woocommerce database (postid and sku)                    
                     $args = array('post_type' => 'product', 'post_status' => 'publish', 'posts_per_page' => -1, 'meta_key' => 'rentman_imported', 'meta_value' => true, 'meta_compare' => '=', 'fields' => 'ids');
                     $posts = get_posts($args);
                     foreach($posts as $postid) {

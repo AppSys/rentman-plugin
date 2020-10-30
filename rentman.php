@@ -963,7 +963,9 @@
         $file_name = 'test.png';
         //$targetUrl = WP_CONTENT_DIR . $artDir . $file_name;
         $targetUrl = wp_upload_dir()["basedir"] . $artDir . $file_name;
-        copy($fileUrl, $targetUrl);
+        $temp_file = download_url($fileUrl);
+        copy($temp_file, $targetUrl);
+        unlink($temp_file);
         $errors = error_get_last();
         if (file_exists($targetUrl)){
             _e('&#x2705; Addition of images was successful.<br>', 'rentalshop');
@@ -982,7 +984,9 @@
 
         # Check if images can be displayed
         $targetUrl = wp_upload_dir()["basedir"] . $artDir . $new_file_name;
-        copy($fileUrlHtaccess,$targetUrl);
+        $temp_file = download_url($fileUrlHtaccess);
+        copy($temp_file,$targetUrl);
+        unlink($temp_file);
         $errors = error_get_last();
         if (!file_exists($targetUrl)){
             _e('&#x26a0; Important: a .htaccess file is missing in the \'uploads/rentman/\' folder! The imported images might not be displayed correctly.<br>', 'rentalshop');
@@ -1085,7 +1089,7 @@
                 }
             }
             rentman_error_log(date("d-m-Y h:i:s a") . " - " . $parsed["message"] . "\n" . $message . "\n");
-        }        
+        }
         return $response;
     }
 

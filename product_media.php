@@ -315,12 +315,14 @@
       rentman_import_log("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#x2794; to: " . $targetUrl . "\n", 0);
 
       if (!file_exists($targetUrl)) {
-          if(!@copy($fileUrl,$targetUrl)){
-              $errors= error_get_last();              
+          $temp_file = download_url($fileUrl);
+          if(!@copy($temp_file,$targetUrl)){
+              $errors= error_get_last();
               if(strpos($errors['message'], "failed to open stream") !== false && strpos($errors['message'], "amazon")){
                   rentman_import_log("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#x274c; Rentman image doesn't exist on amazon.\n", 0);
               }
           }
+          unlink($temp_file);
       }
 
       $file_info = mime_content_type($targetUrl);
