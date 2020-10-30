@@ -280,9 +280,6 @@
       wp_localize_script('admin_availability', 'startDate', $dates['from_date']);
       wp_localize_script('admin_availability', 'endDate', $enddate);
       wp_localize_script('admin_availability', 'productSku', $product->get_sku());
-      wp_localize_script('admin_availability', 'endPoint', receive_endpoint());
-      wp_localize_script('admin_availability', 'rm_account', get_option('plugin-rentman-account'));
-      wp_localize_script('admin_availability', 'rm_token', get_option('plugin-rentman-token'));
       wp_localize_script('admin_availability', 'cart_amount', (string)$quantity);
       wp_localize_script('admin_availability', 'unavailable', __("Product is not available!", "rentalshop"));
       wp_localize_script('admin_availability', 'maybe', __("Product might not be available!", "rentalshop"));
@@ -469,5 +466,63 @@
      }
      return $passed;
  }
+
+function rentman_is_available()
+{
+    $url = receive_endpoint();
+    $identifier = $_POST['productID'];
+    $quantity = $_POST['totalAmount'];
+    $sdate = $_POST['fromDate'];
+    $edate = $_POST['toDate'];
+
+    //input validation
+    if (!is_numeric($identifier)) {
+        exit("Invalid productID");
+    }
+
+    if (!is_numeric($quantity) || $quantity < 1) {
+        exit("Invalid totalAmount");
+    }
+
+    if (preg_match("/(?<startYear>\d{4})-(?<startMonth>\d{2})-(?<startDay>\d{2})/", $sdate, $matches)) {
+        if ($matches['startYear'] < date('Y') || $matches['startYear'] > 2099) {
+            exit("Invalid fromDate");
+        }
+        if ($matches['startMonth'] < 1 || $matches['startMonth'] > 12) {
+            exit("Invalid fromDate");
+        }
+        if ($matches['startDay'] < 1 || $matches['startDay'] > 31 || ($matches['startDay'] > 29 && $matches['startMonth'] == 2) || ($matches['startDay'] > 30 && in_array($matches['startMonth'], [2, 4, 6, 9, 11]))) {
+            exit("Invalid fromDate");
+        }
+    } else {
+        exit("Invalid fromDate");
+    }
+
+    if (preg_match("/(?<endYear>\d{4})-(?<endMonth>\d{2})-(?<endDay>\d{2})/", $edate, $matches)) {
+        if ($matches['endYear'] < date('Y') || $matches['endYear'] > 2099) {
+            exit("Invalid toDate");
+        }
+        if ($matches['endMonth'] < 1 || $matches['endMonth'] > 12) {
+            exit("Invalid toDate");
+        }
+        if ($matches['endDay'] < 1 || $matches['endDay'] > 31 || ($matches['endDay'] > 29 && $matches['endMonth'] == 2) || ($matches['endDay'] > 30 && in_array($matches['endMonth'], [2, 4, 6, 9, 11]))) {
+            exit("Invalid toDate");
+        }
+    } else {
+        exit("Invalid toDate");
+    }
+
+    # Setup Request to send JSON
+    $message = json_encode(available_request(get_option('plugin-rentman-token'), $identifier, $quantity, true, $sdate, $edate), JSON_PRETTY_PRINT);
+    # Send Request & Receive Response
+    $received = do_request($url, $message);
+    $parsed = parseResponse(json_decode($received, true));
+
+    $json['maxconfirmed'] = $parsed['response']['value']['maxconfirmed'];
+    $json['maxoption'] = $parsed['response']['value']['maxoption'];
+
+    echo(json_encode($json));
+    wp_die();
+}
 
 ?>

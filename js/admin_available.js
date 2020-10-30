@@ -115,39 +115,38 @@ function quickCheck() {
             	var amount = document.getElementsByClassName("input-text qty text")[0].value;
             else
             	var amount = 1;
+
+            var totalAmount = parseInt(amount) + parseInt(cart_amount);
+            var fromDate = String(fromDate).substring(0,4) + "-" + String(fromDate).substring(4,6) + "-" + String(fromDate).substring(6,8);
+
             // Do the actual request
-            xhr = new XMLHttpRequest();
-            var url = endPoint;
-            var account = rm_account;
-            var token = rm_token;
-            var totalamount = parseInt(amount) + parseInt(cart_amount);
-            xhr.open("POST", url, true);
-            xhr.setRequestHeader("Content-type", "application/json");
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    var json = JSON.parse(xhr.responseText);
-                    var maxcon = json.response.value.maxconfirmed;
-                    var maxopt = json.response.value.maxoption;
+            jQuery.ajax({
+                type: 'post',
+                dataType: 'json',
+                url: ajax_file_path,
+                data: {
+                    action: 'rentman_is_available',
+                    fromDate: fromDate,
+                    toDate: toDate,
+                    productID: productID,
+                    totalAmount: totalAmount
+                },
+                success: function (response) {
+                    var maxcon = response.maxconfirmed;
+                    var maxopt = response.maxoption;
                     // Show correct message depending on the values of maxconfirmed and maxoption
-                    if (maxcon < 0){
+                    if (maxcon < 0) {
                         document.getElementsByClassName("availLog")[0].innerHTML = unavailable;
                         document.getElementsByClassName("availLog")[0].style = "color:red";
-                    }
-                    else if (maxcon >= 0 & maxopt < 0){
+                    } else if (maxcon >= 0 & maxopt < 0) {
                         document.getElementsByClassName("availLog")[0].innerHTML = maybe;
                         document.getElementsByClassName("availLog")[0].style = "color:orange";
-                    }
-                    else{
+                    } else {
                         document.getElementsByClassName("availLog")[0].innerHTML = available;
                         document.getElementsByClassName("availLog")[0].style = "color:green";
                     }
                 }
-            }
-            var fromDate = String(fromDate).substring(0,4) + "-" + String(fromDate).substring(4,6) + "-" + String(fromDate).substring(6,8);
-            var data = JSON.stringify({"requestType":"modulefunction","client":{"language":1,"type":"webshopplugin",
-                "version":"5.1.1"},"account":account,"token":token,"module":"Availability","parameters":{
-                "van":fromDate,"tot":toDate,"materiaal":productID,"aantal":totalamount},"method":"is_available"});
-            xhr.send(data);
+            });
         }
     }
 }

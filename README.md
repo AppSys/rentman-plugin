@@ -1,24 +1,25 @@
-Rentman 4G WooCommerce Plugin - Version Advanced 5.1.1 - By AppSys
+Rentman 4G WooCommerce Plugin - Version Advanced 5.1.2 - By AppSys
 
-Update 5.1.1
+Update 5.1.2
 -----------------------------
--WordPress 5.3.2 compatibility<br>
--WooCommerce 5.0.1 compatibility<br>
--Extra hooks for add-on plugin development<br>
--New: Import log<br>
--New languages (front-end): French and Spanish<br>
+-Bugfix on import only filter rentmanimported products  
+-Fixed security issue  
+-WordPress 5.5.2 compatibility  
+-WooCommerce 4.6.1 compatibility  
+-New language included: German  
 -Minor bug fixes
 
-Release: 30-03-2020
+Release: 30-10-2020
 -----------------------------
--Products will be updated instead of deleted<br>
--Better image management, delete and cleaning up of images if applicable<br>
--Seo-friendly names for images<br>
--Possibility to add alternative text to images<br>
--Possibility to place a product in the spotlight<br>
--Adding tags to products is also possible<br>
--Integration of seo title, keyword and description within the Rentman app<br>
--Possibility to import custom fields (for materials) created on the Rentman side<br>
+
+-Products will be updated instead of deleted  
+-Better image management, delete and cleaning up of images if applicable  
+-Seo-friendly names for images  
+-Possibility to add alternative text to images  
+-Possibility to place a product in the spotlight  
+-Adding tags to products is also possible  
+-Integration of seo title, keyword and description within the Rentman app  
+-Possibility to import custom fields (for materials) created on the Rentman side  
 -Linking PDF files to a product
 
 Installation process

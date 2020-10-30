@@ -4,12 +4,12 @@
      * Plugin Name: Rentman Advanced
      * GitHub Plugin URI: https://github.com/AppSys/rentman-plugin
      * Description: Integrates Rentman rental software into WooCommerce
-     * Version: 5.1.1
+     * Version: 5.1.2
      * Author: AppSys
      * Text Domain: rentalshop
      * Domain Path: /lang
      * WC requires at least: 3.0.0
-     * WC tested up to: 3.5.5
+     * WC tested up to: 4.6.1
      */
 
     //error_reporting(E_ALL | E_STRICT);
@@ -119,6 +119,8 @@
     add_action('wp_ajax_nopriv_wdm_add_user_custom_data_options', 'update_dates');
     add_action( 'wp_ajax_rentman_start_import', 'rentman_start_import' );
     add_action( 'wp_ajax_rentman_get_import_log', 'rentman_get_import_log' );
+    add_action('wp_ajax_rentman_is_available','rentman_is_available');
+    add_action('wp_ajax_nopriv_rentman_is_available','rentman_is_available');
 
     # Add filters for certain buttons and texts
     //add_filter( 'single_template', 'get_custom_post_type_template' );
