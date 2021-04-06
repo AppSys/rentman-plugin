@@ -59,7 +59,8 @@
                             if (1 - current($discounts) == 1){
                                 return;
                             }
-                            echo '<h4 style="color:#8b0000">' . $notice . '€' . number_format(round($discountprice, 2), 2) . '</h4>';
+                                                        
+                            echo '<h4 style="color:#8b0000">' . $notice . wc_price($discountprice) . '</h4>';
                         }
                     }
                 }
@@ -76,7 +77,7 @@
             # Get token and dates
             $dates = get_dates();
             $fromDate = strtotime($dates['from_date']);
-            $endDate = strtotime($dates['to_date']);            
+            $endDate = strtotime($dates['to_date']);
             $totaldays = abs($endDate - $fromDate);
             $totaldays = ceil($totaldays / (3600*24)) + 1;
             $totaldays = apply_filters( 'rentman_change_staffel_total_days', $totaldays);

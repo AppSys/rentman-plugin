@@ -59,7 +59,7 @@
                     $id_sku = array();
                     $skus = array_keys($parsed['response']['items']['Materiaal']);
                     $woocommerce_rentman_products = array();
-                    # GET all the rentman products already in the woocommerce database (postid and sku)                    
+                    # GET all the rentman products already in the woocommerce database (postid and sku)
                     $args = array('post_type' => 'product', 'post_status' => 'publish', 'posts_per_page' => -1, 'meta_key' => 'rentman_imported', 'meta_value' => true, 'meta_compare' => '=', 'fields' => 'ids');
                     $posts = get_posts($args);
                     foreach($posts as $postid) {
@@ -197,7 +197,7 @@
             }
 
             # Check all modified dates of tags and update $modDate if necessary
-            $taglist = preg_replace('/\s/', '', $parsed['response']['items']['Materiaal'][$x]['data']['taglist']);
+            $taglist = preg_replace('/\s/', ' ', $parsed['response']['items']['Materiaal'][$x]['data']['taglist']);
             $nbrOfTags = 0;
             if(isset($parsed['response']['items']['Materiaal'][$x]['links']['Taglink'])) {
                 $nbrOfTags =  sizeof($parsed['response']['items']['Materiaal'][$x]['links']['Taglink']);
@@ -245,7 +245,7 @@
                     "height" => $parsed['response']['items']['Materiaal'][$x]['data']['height'],
                     "amount" => $parsed['response']['items']['Materiaal'][$x]['data']['aantalberekend'],
                     "lowstocktreshold" => $parsed['response']['items']['Materiaal'][$x]['data']['verkoopalarm'],
-                    "tag_list" => strtolower(preg_replace('/\s/', '', $parsed['response']['items']['Materiaal'][$x]['data']['taglist'])),
+                    "tag_list" => strtolower(preg_replace('/\s/', ' ', $parsed['response']['items']['Materiaal'][$x]['data']['taglist'])),
                     "seo_title" => $parsed['response']['items']['Materiaal'][$x]['data']['shop_seo_title'],
                     "seo_metadesc" => $parsed['response']['items']['Materiaal'][$x]['data']['shop_seo_description'],
                     "seo_focuskw" => $parsed['response']['items']['Materiaal'][$x]['data']['shop_seo_keyword'],
@@ -493,7 +493,7 @@
         update_post_meta($post_id, '_width', $product['width']);
         update_post_meta($post_id, '_height', $product['height']);
         update_post_meta($post_id, '_sku', $product['id']);
-        update_post_meta($post_id, '_product_attributes', array());
+        //update_post_meta($post_id, '_product_attributes', array());
         update_post_meta($post_id, '_sale_price_dates_from', "");
         update_post_meta($post_id, '_sale_price_dates_to', "");
         update_post_meta($post_id, '_price', $product['cost']);
@@ -599,7 +599,7 @@
             foreach ( $terms as $term ) {
                 $termscheck[]= strtolower($term->name);
             }
-            $taglist = explode(",", strtolower($taglist));
+            $taglist = explode(", ", strtolower($taglist));
             sort($taglist);
             sort($termscheck);
             if($taglist != $termscheck) {

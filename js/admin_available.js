@@ -20,7 +20,7 @@ jQuery().ready(function() {
       if(startdate > enddate){
         enddateyear = parseInt(String(startdate).substring(0,4));
         enddatemonth = parseInt(String(startdate).substring(4,6)) - 1;
-        enddateday = parseInt(String(startdate).substring(6,8));        
+        enddateday = parseInt(String(startdate).substring(6,8));
         jQuery('#end-date').datepicker().data('datepicker').selectDate(new Date(enddateyear,enddatemonth,enddateday));
       }else{
         quickCheck();
@@ -117,7 +117,7 @@ function quickCheck() {
             	var amount = 1;
 
             var totalAmount = parseInt(amount) + parseInt(cart_amount);
-            var fromDate = String(fromDate).substring(0,4) + "-" + String(fromDate).substring(4,6) + "-" + String(fromDate).substring(6,8);
+            var fromDate = String(fromDate).substring(0,4) + "-" + String(fromDate).substring(4,6) + "-" + String(fromDate).substring(6,8);            
 
             // Do the actual request
             jQuery.ajax({
